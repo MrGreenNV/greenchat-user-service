@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"ru.averkiev.greenchat_user","l":"GreenChatUserServiceApplication"},{"p":"ru.averkiev.greenchat_user.models","l":"Status"},{"p":"ru.averkiev.greenchat_user.models","l":"User"}];updateSearchResults();
