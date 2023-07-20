@@ -121,4 +121,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<User> contacts;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Blocking> blockingInitiated;
+
+    @OneToMany(mappedBy = "blockedUser")
+    private Set<Blocking> blockingReceived;
 }
