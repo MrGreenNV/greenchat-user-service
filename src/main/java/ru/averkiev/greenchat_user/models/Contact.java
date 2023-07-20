@@ -9,7 +9,6 @@ import javax.persistence.*;
  * Этот класс отвечает за хранение информации о связях между пользователями.
  * @author mrGreenNV
  */
-
 @Entity
 @Table(name = "contacts")
 @Data

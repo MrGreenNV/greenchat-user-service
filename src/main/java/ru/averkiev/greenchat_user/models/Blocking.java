@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class Blocking {
 
     /**
-     * Идентификатор контакта.
+     * Идентификатор блокировки.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
