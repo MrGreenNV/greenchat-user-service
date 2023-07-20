@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Интерфейс описывает функциональность сервиса пользователей.
+ * Интерфейс определяет функциональность для управления пользователями.
  * @author mrGreenNV
  */
 public interface UserService {
