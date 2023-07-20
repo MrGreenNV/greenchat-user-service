@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Класс представляет собой модель пользователя системы.
@@ -103,9 +104,18 @@ public class User {
     private Date updatedAt;
 
     /**
-     * Статус в системе пользователя.
+     * Статус пользователя в системе.
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
+    /**
+     * Список ролей пользователя.
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private Set<Role> roles;
 }
