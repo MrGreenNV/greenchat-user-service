@@ -25,18 +25,18 @@ public class User {
 
     /**
      * Конструктор для создания пользователя с основными параметрами.
-     * @param username - имя пользователя.
+     * @param login - имя пользователя.
      * @param password - хэшированный пароль пользователя.
      * @param firstname - имя.
      * @param lastname - фамилия.
      * @param email - электронная почта.
      */
-    public User(String username,
+    public User(String login,
                 String password,
                 String firstname,
                 String lastname,
                 String email) {
-        this.username = username;
+        this.login = login;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -54,10 +54,10 @@ public class User {
     /**
      * Имя пользователя для входа в систему - логин.
      */
-    @Size(min = 6, max = 254, message = "Логин должен быть больше 5 и меньше 255 символов")
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "В имени допустимы цифры, латинские буквы и символ '_'")
-    @Column(name = "username")
-    private String username;
+    @Size(min = 6, max = 254, message = "Логин должен иметь больше 5 и меньше 255 символов")
+    @Pattern(regexp = "^[a-zA-Z0-9]*_?[a-zA-Z0-9]*$", message = "В логине допустимы цифры, латинские буквы и один символ '_'")
+    @Column(name = "login")
+    private String login;
 
     /**
      * Хэшированный пароль пользователя.
@@ -68,16 +68,16 @@ public class User {
     /**
      * Имя пользователя.
      */
-    @Size(min = 3, max = 99, message = "Имя должно быть больше двух и меньше 100 символов")
-    @Pattern(regexp = "^[a-zA-Z]*$|^[а-яА-Я]*\\$]")
+    @Size(min = 3, max = 99, message = "Имя должно иметь больше 2 и меньше 100 символов")
+    @Pattern(regexp = "^[a-zA-Z]*$|^[а-яА-Я]*$", message = "В имени допустимы только буквы")
     @Column(name = "firstname")
     private String firstname;
 
     /**
      * Фамилия пользователя.
      */
-    @Size(min = 3, max = 99, message = "Фамилия должна быть больше двух и меньше 100 символов")
-    @Pattern(regexp = "^[a-zA-Z]*$|^[а-яА-Я]*\\$]")
+    @Size(min = 3, max = 99, message = "Фамилия должна иметь больше 2 и меньше 100 символов")
+    @Pattern(regexp = "^[a-zA-Z]*$|^[а-яА-Я]*$", message = "В фамилии допустимы только буквы")
     @Column(name = "lastname")
     private String lastname;
 
