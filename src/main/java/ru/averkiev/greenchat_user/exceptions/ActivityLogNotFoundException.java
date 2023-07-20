@@ -1,16 +1,16 @@
 package ru.averkiev.greenchat_user.exceptions;
 
 /**
- * Исключение, выбрасываемое в случае если не удалось найти пользователя в базе данных.
+ * Исключение, выбрасываемое в случае если не удалось найти запись об активности в базе данных.
  * @author mrGreenNV
  */
-public class UserNotFoundException extends RuntimeException {
+public class ActivityLogNotFoundException extends RuntimeException {
 
     /**
      * Создаёт экземпляр исключения с указанным сообщением об ошибке.
      * @param msg - сообщение об ошибке.
      */
-    public UserNotFoundException(String msg) {
+    public ActivityLogNotFoundException(String msg) {
         super(msg);
     }
 
@@ -19,7 +19,7 @@ public class UserNotFoundException extends RuntimeException {
      * @param msg - сообщение об ошибке.
      * @param cause - причина исключения.
      */
-    public UserNotFoundException(String msg, Throwable cause) {
+    public ActivityLogNotFoundException(String msg, Throwable cause) {
         super(msg, cause);
     }
 }
