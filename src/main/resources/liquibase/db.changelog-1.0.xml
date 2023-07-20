@@ -108,16 +108,6 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="1.0.7" author="mrGreenNV">
-        <addForeignKeyConstraint baseColumnNames="contact_user_id"
-                                 baseTableName="contacts"
-                                 constraintName="fk_contacts_contact"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="users"/>
-    </changeSet>
-
     <changeSet id="1.0.8" author="mrGreenNV">
         <createTable tableName="activity_logs">
             <column name="id" type="BIGINT">
