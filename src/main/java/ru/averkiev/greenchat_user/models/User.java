@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -127,4 +128,7 @@ public class User {
 
     @OneToMany(mappedBy = "blockedUser")
     private Set<Blocking> blockingReceived;
+
+    @OneToMany(mappedBy = "user")
+    List<ActivityLog> activityLogs;
 }
