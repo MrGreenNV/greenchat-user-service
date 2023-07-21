@@ -27,11 +27,11 @@ public class User {
 
     /**
      * Конструктор для создания пользователя с основными параметрами.
-     * @param login - имя пользователя.
-     * @param password - хэшированный пароль пользователя.
-     * @param firstname - имя.
-     * @param lastname - фамилия.
-     * @param email - электронная почта.
+     * @param login имя пользователя.
+     * @param password хэшированный пароль пользователя.
+     * @param firstname имя.
+     * @param lastname фамилия.
+     * @param email электронная почта.
      */
     public User(String login,
                 String password,
@@ -120,15 +120,27 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles;
 
+    /**
+     * Список контактов пользователя.
+     */
     @OneToMany(mappedBy = "user")
     private Set<User> contacts;
 
+    /**
+     * Список блокировок пользователя, которые он инициировал.
+     */
     @OneToMany(mappedBy = "user")
     private Set<Blocking> blockingInitiated;
 
+    /**
+     * Список блокировок против данного пользователя.
+     */
     @OneToMany(mappedBy = "blockedUser")
     private Set<Blocking> blockingReceived;
 
+    /**
+     * Список активностей данного пользователя.
+     */
     @OneToMany(mappedBy = "user")
     List<ActivityLog> activityLogs;
 }
