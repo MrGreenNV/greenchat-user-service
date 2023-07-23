@@ -1,8 +1,5 @@
 package ru.averkiev.greenchat_user.models;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,8 +53,6 @@ public class User {
     /**
      * Имя пользователя для входа в систему - логин.
      */
-    @Size(min = 6, max = 254, message = "Логин должен иметь больше 5 и меньше 255 символов")
-    @Pattern(regexp = "^[a-zA-Z0-9]*_?[a-zA-Z0-9]*$", message = "В логине допустимы цифры, латинские буквы и один символ '_'")
     @Column(name = "login")
     private String login;
 
@@ -70,23 +65,18 @@ public class User {
     /**
      * Имя пользователя.
      */
-    @Size(min = 3, max = 99, message = "Имя должно иметь больше 2 и меньше 100 символов")
-    @Pattern(regexp = "^[a-zA-Z]*$|^[а-яА-Я]*$", message = "В имени допустимы только буквы")
     @Column(name = "firstname")
     private String firstname;
 
     /**
      * Фамилия пользователя.
      */
-    @Size(min = 3, max = 99, message = "Фамилия должна иметь больше 2 и меньше 100 символов")
-    @Pattern(regexp = "^[a-zA-Z]*$|^[а-яА-Я]*$", message = "В фамилии допустимы только буквы")
     @Column(name = "lastname")
     private String lastname;
 
     /**
      * Email пользователя.
      */
-    @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+.+.[A-Za-z]{2,4}$", message = "Email должен быть валидным")
     @Column(name = "email")
     private String email;
 
