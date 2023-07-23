@@ -5,10 +5,7 @@ import ru.averkiev.greenchat_user.exceptions.RegistrationException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.Blocking;
 import ru.averkiev.greenchat_user.models.User;
-import ru.averkiev.greenchat_user.models.dto.user.UpdatePasswordDTO;
-import ru.averkiev.greenchat_user.models.dto.user.UserCreateDTO;
-import ru.averkiev.greenchat_user.models.dto.user.UserRegistrationDTO;
-import ru.averkiev.greenchat_user.models.dto.user.UserUpdateDTO;
+import ru.averkiev.greenchat_user.models.dto.user.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,10 +56,10 @@ public interface UserService {
     /**
      * Обновляет пароль пользователя с указанным идентификатором.
      * @param userId указанный идентификатор пользователя.
-     * @param updatePasswordDTO объект содержащий новый пароль.
+     * @param userUpdatePasswordDTO объект содержащий новый пароль.
      * @throws UserNotFoundException выбрасывает если пользователь с указанным идентификатором не найден.
      */
-    void updateUserPassword(Long userId, UpdatePasswordDTO updatePasswordDTO) throws UserNotFoundException, PasswordsNotMatchException;
+    void updateUserPassword(Long userId, UserUpdatePasswordDTO userUpdatePasswordDTO) throws UserNotFoundException, PasswordsNotMatchException;
 
     /**
      * Удаляет пользователя по его идентификатору.
@@ -74,7 +71,7 @@ public interface UserService {
      * Помечает пользователя удалённым, но не удаляет физически.
      * @param userId идентификатор пользователя.
      */
-    void softDeleteUser(Long userId);
+    UserStatusDTO softDeleteUser(Long userId);
 
     /**
      * Возвращает список блокировок, инициированных указанным пользователем.

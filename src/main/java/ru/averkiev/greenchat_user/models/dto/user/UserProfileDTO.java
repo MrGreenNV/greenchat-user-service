@@ -7,7 +7,7 @@ import ru.averkiev.greenchat_user.validation.CustomLogin;
 import ru.averkiev.greenchat_user.validation.CustomName;
 
 /**
- * Класс представляет собой модель DTO для представления профиля пользователя.
+ * Класс DTO для представления профиля пользователя.
  * Модель используется для передачи данных между различными слоями приложения.
  * @author mrGreenNV
  */
