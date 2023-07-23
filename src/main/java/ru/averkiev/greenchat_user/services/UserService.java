@@ -1,9 +1,14 @@
 package ru.averkiev.greenchat_user.services;
 
+import ru.averkiev.greenchat_user.exceptions.PasswordsNotMatchException;
 import ru.averkiev.greenchat_user.exceptions.RegistrationException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.Blocking;
 import ru.averkiev.greenchat_user.models.User;
+import ru.averkiev.greenchat_user.models.dto.user.UpdatePasswordDTO;
+import ru.averkiev.greenchat_user.models.dto.user.UserCreateDTO;
+import ru.averkiev.greenchat_user.models.dto.user.UserRegistrationDTO;
+import ru.averkiev.greenchat_user.models.dto.user.UserUpdateDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,73 +20,95 @@ import java.util.Optional;
 public interface UserService {
     /**
      * Регистрирует нового пользователя в системе.
-     * @param user - новый пользователь.
-     * @return - зарегистрированный пользователь.
-     * @throws RegistrationException если регистрация пользователя не удалась по каким-либо причинам.
+     * @param userCreateDTO DTO данные нового пользователя.
+     * @return зарегистрированный пользователь.
+     * @throws RegistrationException выбрасывает если регистрация пользователя не удалась по каким-либо причинам.
      */
-    User register(User user) throws RegistrationException;
+    UserRegistrationDTO register(UserCreateDTO userCreateDTO) throws RegistrationException;
+
+    /**
+     * Создаёт нового пользователя в системе
+     * @param user новый пользователь.
+     * @return созданный пользователь.
+     */
+    User saveUser(User user);
 
     /**
      * Возвращает пользователя по его идентификатору.
-     * @param userId - идентификатор искомого пользователя.
-     * @return - Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
+     * @param userId идентификатор искомого пользователя.
+     * @return Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
      */
     Optional<User> getUserById(Long userId);
 
     /**
      * Возвращает пользователя по его логину.
-     * @param login - логин пользователя.
-     * @return - Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
+     * @param login логин пользователя.
+     * @return Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
      */
     Optional<User> getUserByLogin(String login);
 
     /**
-     * Создаёт нового пользователя в системе
-     * @param user - новый пользователь.
-     * @return - созданный пользователь.
+     * Обновляет информацию о пользователе с указанным идентификатором.
+     * @param userId идентификатор обновляемого пользователя.
+     * @param userUpdateDTO объект, содержащий обновлённые данные пользователя.
+     * @return обновлённый объект пользователя.
+     * @throws UserNotFoundException выбрасывает если пользователь с указанным идентификатором не найден.
      */
-    User createUser(User user);
+    UserUpdateDTO updateUser(Long userId, UserUpdateDTO userUpdateDTO) throws UserNotFoundException;
 
     /**
-     * Обновляет информацию о пользователе с указанным идентификатором.
-     * @param userId - идентификатор обновляемого пользователя.
-     * @param updateUser - объект, содержащий обновлённые данные пользователя.
-     * @return - обновлённый объект пользователя.
-     * @throws UserNotFoundException - выбрасывается, если пользователь с указанным идентификатором не найден.
+     * Обновляет пароль пользователя с указанным идентификатором.
+     * @param userId указанный идентификатор пользователя.
+     * @param updatePasswordDTO объект содержащий новый пароль.
+     * @throws UserNotFoundException выбрасывает если пользователь с указанным идентификатором не найден.
      */
-    User updateUser(Long userId, User updateUser) throws UserNotFoundException;
+    void updateUserPassword(Long userId, UpdatePasswordDTO updatePasswordDTO) throws UserNotFoundException, PasswordsNotMatchException;
 
     /**
      * Удаляет пользователя по его идентификатору.
-     * @param userId - идентификатор пользователя.
+     * @param userId идентификатор удаляемого пользователя.
      */
     void deleteUser(Long userId);
 
     /**
-     * Проверяет, существует ли пользователь с указанным идентификатором.
-     * @param userId - идентификатор проверяемого пользователя.
-     * @return - true, если пользователь существует, иначе false.
+     * Помечает пользователя удалённым, но не удаляет физически.
+     * @param userId идентификатор пользователя.
      */
-    boolean existsUser(Long userId);
-
-    /**
-     * Добавляет блокировку между пользователями.
-     * @param initiatorUserId - идентификатор инициатора.
-     * @param blockedUserId - идентификатор блокируемого пользователя.
-     */
-    void addBlocking(Long initiatorUserId, Long blockedUserId);
+    void softDeleteUser(Long userId);
 
     /**
      * Возвращает список блокировок, инициированных указанным пользователем.
-     * @param userId - идентификатор пользователя, инициирующего блокировки.
-     * @return - список блокировок.
+     * @param userId идентификатор пользователя, инициирующего блокировки.
+     * @return список блокировок.
      */
     List<Blocking> getBlockingInitiatedByUser(Long userId);
 
     /**
      * Возвращает список блокировок, адресованных указанному пользователю.
-     * @param userId - идентификатор указанного пользователя.
-     * @return - список блокировок.
+     * @param userId идентификатор указанного пользователя.
+     * @return список блокировок.
      */
     List<Blocking> getBlockingReceivedByUser(Long userId);
+
+    /**
+     * Проверяет, существует ли пользователь с указанным идентификатором.
+     * @param userId идентификатор проверяемого пользователя.
+     * @return true, если пользователь существует, иначе false.
+     */
+    boolean existsUserById(Long userId);
+
+    /**
+     * Проверяет, существует ли пользователь с указанным логином.
+     * @param login логин проверяемого пользователя.
+     * @return true, если пользователь существует, иначе false.
+     */
+    boolean existsUserByLogin(String login);
+
+    /**
+     * Проверяет, существует ли пользователь с указанной электронной почтой.
+     * @param email электронная почта проверяемого пользователя.
+     * @return true, если пользователь существует, иначе false.
+     */
+    boolean existsUserByEmail(String email);
+
 }
