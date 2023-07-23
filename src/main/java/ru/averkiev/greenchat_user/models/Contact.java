@@ -2,7 +2,7 @@ package ru.averkiev.greenchat_user.models;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Класс представляет собой контакт пользователя системы.

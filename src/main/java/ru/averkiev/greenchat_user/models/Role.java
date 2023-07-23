@@ -1,12 +1,12 @@
 package ru.averkiev.greenchat_user.models;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Класс представляет собой роли пользователя в системе.
@@ -56,5 +56,5 @@ public class Role {
      * Список пользователей с данной ролью.
      */
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Set<User> users;
+    private List<User> users;
 }

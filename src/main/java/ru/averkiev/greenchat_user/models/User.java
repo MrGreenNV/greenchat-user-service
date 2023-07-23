@@ -1,12 +1,13 @@
 package ru.averkiev.greenchat_user.models;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -114,19 +115,19 @@ public class User {
      * Список контактов пользователя.
      */
     @OneToMany(mappedBy = "user")
-    private Set<User> contacts;
+    private List<Contact> contacts;
 
     /**
      * Список блокировок пользователя, которые он инициировал.
      */
     @OneToMany(mappedBy = "user")
-    private Set<Blocking> blockingInitiated;
+    private List<Blocking> blockingInitiated;
 
     /**
      * Список блокировок против данного пользователя.
      */
     @OneToMany(mappedBy = "blockedUser")
-    private Set<Blocking> blockingReceived;
+    private List<Blocking> blockingReceived;
 
     /**
      * Список активностей данного пользователя.

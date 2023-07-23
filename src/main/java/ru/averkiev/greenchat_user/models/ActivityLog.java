@@ -3,7 +3,7 @@ package ru.averkiev.greenchat_user.models;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 /**
