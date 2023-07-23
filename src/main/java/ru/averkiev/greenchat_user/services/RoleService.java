@@ -4,6 +4,7 @@ import ru.averkiev.greenchat_user.exceptions.RoleAlreadyExistsException;
 import ru.averkiev.greenchat_user.exceptions.RoleNotFoundException;
 import ru.averkiev.greenchat_user.models.Role;
 import ru.averkiev.greenchat_user.models.User;
+import ru.averkiev.greenchat_user.models.dto.user.UserStatusDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,4 +66,10 @@ public interface RoleService {
      * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
      */
     void deleteRole(Long roleId) throws RoleNotFoundException;
+
+    /**
+     * Помечает роль удалённой, но не удаляет физически.
+     * @param roleId идентификатор роли.
+     */
+    Role softDeleteRole(Long roleId);
 }
