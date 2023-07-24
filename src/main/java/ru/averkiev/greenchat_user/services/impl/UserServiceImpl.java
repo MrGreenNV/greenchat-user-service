@@ -66,8 +66,8 @@ public class UserServiceImpl implements UserService {
 
         } catch (PasswordsNotMatchException | UserWithLoginAlreadyExistsException | UserWithEmailAlreadyExistsException regEx) {
 
-            log.error("IN register - пользователь с логином '{}' не зарегистрирован", user.getLogin(), regEx);
-            throw new RegistrationException(regEx.getMessage(), regEx.getCause());
+            log.error("IN register - пользователь с логином '{}' не был зарегистрирован", user.getLogin(), regEx);
+            throw new RegistrationException(regEx.getMessage(), regEx);
 
         }
 
@@ -179,14 +179,14 @@ public class UserServiceImpl implements UserService {
 
         // Обработка поиска в случае, если пользователь не найден.
         if (user == null) {
-            log.error("IN updateUser - пользователь с id {} не обновлён.", userId);
+            log.error("IN updatePassword - пароль не обновлён");
             throw new UserNotFoundException("Пользователь с id: " + userId + " не найден");
         }
 
         // Проверка на корректность текущего пароля.
         if (!userUpdatePasswordDTO.getCurrentPassword().equals(user.getPassword())) {
             log.error("IN updatePassword - пароль не обновлён");
-            throw new PasswordsNotMatchException("Не правильный текущий пароль");
+            throw new PasswordsNotMatchException("Неправильный текущий пароль");
         }
 
         // Проверка совпадения нового пароля и его подтверждения.
