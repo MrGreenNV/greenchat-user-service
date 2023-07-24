@@ -349,7 +349,7 @@ class UserServiceImplTest {
     }
 
     /**
-     * Проверяет обновление валидного пароля пользователя, при попытке сменить пароль на тот же самыйб.
+     * Проверяет обновление валидного пароля пользователя, при попытке сменить пароль на тот же самый.
      */
     @Test
     void testUpdateUserPassword_InvalidNewPassword_ThrowPasswordNotMatchException() {
