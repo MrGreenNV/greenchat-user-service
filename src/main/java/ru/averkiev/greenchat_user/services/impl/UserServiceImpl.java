@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.averkiev.greenchat_user.exceptions.*;
 import ru.averkiev.greenchat_user.models.Blocking;
+import ru.averkiev.greenchat_user.models.Role;
 import ru.averkiev.greenchat_user.models.Status;
 import ru.averkiev.greenchat_user.models.User;
 import ru.averkiev.greenchat_user.models.dto.user.*;
@@ -246,6 +247,36 @@ public class UserServiceImpl implements UserService {
         log.info("IN softDeleteUser - пользователь успешно помечен под удаление");
 
         return modelMapper.map(user, UserStatusDTO.class);
+    }
+
+    /**
+     * Возвращает список всех пользователей.
+     * @return список ролей.
+     */
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * Возвращает список всех ролей по имени пользователя.
+     * @param login указанное имя пользователя.
+     * @return список пользователей
+     * @throws RoleNotFoundException - выбрасывается, если указанная роль не найдена.
+     */
+    public List<Role> getRolesByLogin(String login) throws UserNotFoundException {
+
+        // Поиск пользователя по имени.
+        User user = getUserByLogin(login).orElse(null);
+
+        // Случай, когда пользователь не найден.
+        if (user == null) {
+            log.error("IN getRolesByLogin - поиск ролей завершён с ошибкой");
+            throw new UserNotFoundException("Пользователь с логином: " + login + " не найден");
+        }
+
+        log.info("IN getRolesByLogin - поиск ролей успешно завершён");
+        return user.getRoles();
+
     }
 
     @Override

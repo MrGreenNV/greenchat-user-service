@@ -2,8 +2,10 @@ package ru.averkiev.greenchat_user.services;
 
 import ru.averkiev.greenchat_user.exceptions.PasswordsNotMatchException;
 import ru.averkiev.greenchat_user.exceptions.RegistrationException;
+import ru.averkiev.greenchat_user.exceptions.RoleNotFoundException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.Blocking;
+import ru.averkiev.greenchat_user.models.Role;
 import ru.averkiev.greenchat_user.models.User;
 import ru.averkiev.greenchat_user.models.dto.user.*;
 
@@ -72,6 +74,20 @@ public interface UserService {
      * @param userId идентификатор пользователя.
      */
     UserStatusDTO softDeleteUser(Long userId);
+
+    /**
+     * Возвращает список всех пользователей.
+     * @return список ролей.
+     */
+    List<User> getAllUsers();
+
+    /**
+     * Возвращает список всех ролей по имени пользователя.
+     * @param username указанное имя пользователя.
+     * @return список пользователей
+     * @throws RoleNotFoundException - выбрасывается, если указанная роль не найдена.
+     */
+    List<Role> getRolesByLogin(String username) throws UserNotFoundException;
 
     /**
      * Возвращает список блокировок, инициированных указанным пользователем.
