@@ -29,7 +29,7 @@ public class Role {
      * Название роли.
      */
     @Column(name = "name")
-    private String name_role;
+    private String roleName;
 
     /**
      * Дата и время создания роли.

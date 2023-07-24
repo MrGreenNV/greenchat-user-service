@@ -24,6 +24,28 @@ public interface RoleService {
     Role createRole(String roleName) throws RoleAlreadyExistsException;
 
     /**
+     * Возвращает объект обновлённой роли.
+     * @param roleId идентификатор обновляемой роли.
+     * @param roleName новое имя роли.
+     * @return объект обновлённой роли
+     * @throws RoleNotFoundException - выбрасывается, если роль с указанным идентификатором не найдена.
+     */
+    Role updateRole(Long roleId, String roleName) throws RoleNotFoundException;
+
+    /**
+     * Удаляет роль по указанному идентификатору.
+     * @param roleId указанный идентификатор роли.
+     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
+     */
+    void deleteRole(Long roleId) throws RoleNotFoundException;
+
+    /**
+     * Помечает роль удалённой, но не удаляет физически.
+     * @param roleId идентификатор роли.
+     */
+    Role softDeleteRole(Long roleId) throws RoleNotFoundException;
+
+    /**
      * Возвращает роль по указанному идентификатору.
      * @param roleId указанный идентификатор роли.
      * @return Optional, содержащий найденную роль, или пустой Optional, если роль не найдена.
@@ -52,24 +74,9 @@ public interface RoleService {
     List<User> getUsersByRole(String roleName) throws RoleNotFoundException;
 
     /**
-     * Возвращает объект обновлённой роли.
-     * @param roleId идентификатор обновляемой роли.
-     * @param roleName новое имя роли.
-     * @return объект обновлённой роли
-     * @throws RoleNotFoundException - выбрасывается, если роль с указанным идентификатором не найдена.
+     * Проверяет, существует ли роль с данным названием.
+     * @param roleName электронная почта проверяемого пользователя.
+     * @return true, если пользователь существует, иначе false.
      */
-    Role updateRole(Long roleId, String roleName) throws RoleNotFoundException;
-
-    /**
-     * Удаляет роль по указанному идентификатору.
-     * @param roleId указанный идентификатор роли.
-     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
-     */
-    void deleteRole(Long roleId) throws RoleNotFoundException;
-
-    /**
-     * Помечает роль удалённой, но не удаляет физически.
-     * @param roleId идентификатор роли.
-     */
-    Role softDeleteRole(Long roleId);
+    boolean existsRoleByName(String roleName);
 }
