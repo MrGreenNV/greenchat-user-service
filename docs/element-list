@@ -1,2 +1,9 @@
 ru.averkiev.greenchat_user
+ru.averkiev.greenchat_user.config
+ru.averkiev.greenchat_user.exceptions
 ru.averkiev.greenchat_user.models
+ru.averkiev.greenchat_user.models.dto.user
+ru.averkiev.greenchat_user.repositories
+ru.averkiev.greenchat_user.services
+ru.averkiev.greenchat_user.services.impl
+ru.averkiev.greenchat_user.validation

@@ -42,6 +42,7 @@ public interface RoleService {
     /**
      * Помечает роль удалённой, но не удаляет физически.
      * @param roleId идентификатор роли.
+     * @return роль с измененным статусом.
      */
     Role softDeleteRole(Long roleId) throws RoleNotFoundException;
 
