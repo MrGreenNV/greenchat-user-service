@@ -1,8 +1,7 @@
 package ru.averkiev.greenchat_user.models;
 
-import lombok.Data;
-
 import jakarta.persistence.*;
+import lombok.Data;
 
 /**
  * Класс представляет собой контакт пользователя системы.
@@ -30,8 +29,9 @@ public class Contact {
     private User user;
 
     /**
-     * Идентификатор пользователя, являющегося контактом.
+     * Пользователь, являющийся контактом.
      */
-    @Column(name = "contact_user_id")
-    private Long contactUserId;
+    @ManyToOne
+    @JoinColumn(name = "contact_user_id", referencedColumnName = "id")
+    private User contactUser;
 }
