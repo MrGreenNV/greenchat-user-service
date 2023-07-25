@@ -19,19 +19,26 @@ import static org.mockito.Mockito.*;
 
 /**
  * Тестовый класс для проверки класса RoleServiceImpl, реализующего функционал по взаимодействию класса Role с базой
+ * данных.
  * @author mrGreenNV
  */
 class RoleServiceImplTest {
 
-    // объявление объекта заглушки.
+    /**
+     * Заглушка для тестирования.
+     */
     @Mock
     RoleRepository roleRepository;
 
-    // Внедрение заглушек в сервис.
+    /**
+     * Класс, в который внедряется заглушка.
+     */
     @InjectMocks
     RoleServiceImpl roleService;
 
-    // Выполнится перед тестами.
+    /**
+     * Выполняется перед тестами.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
