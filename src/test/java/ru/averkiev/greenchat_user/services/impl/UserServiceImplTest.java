@@ -381,9 +381,9 @@ class UserServiceImplTest {
      * Проверяет количество вызовов метода delete при удалении пользователя.
      */
     @Test
-    void deleteUser() {
-        // Создание тестовых данных.
+    void testDeleteUser() {
 
+        // Создание тестовых данных.
         Long userId = 1L;
         User user = new User();
         user.setId(userId);
@@ -401,7 +401,7 @@ class UserServiceImplTest {
      * Проверяет изменение статуса пользователя при "мягком" удалении.
      */
     @Test
-    void softDeleteUser() {
+    void testSoftDeleteUser() {
 
         // Создание тестовых данных.
         Long userId = 1L;
