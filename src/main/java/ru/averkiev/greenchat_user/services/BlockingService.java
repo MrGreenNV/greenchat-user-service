@@ -4,6 +4,7 @@ import ru.averkiev.greenchat_user.exceptions.BlockingAlreadyExistsException;
 import ru.averkiev.greenchat_user.exceptions.BlockingNotFoundException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.Blocking;
+import ru.averkiev.greenchat_user.models.User;
 
 import java.util.Optional;
 
@@ -15,21 +16,20 @@ public interface BlockingService {
 
     /**
      * Создает новую блокировку между пользователями.
-     * @param userId идентификатор инициатора блокировки.
-     * @param blockedUserId идентификатор блокируемого пользователя.
+     * @param user инициатор блокировки.
+     * @param blockedUser блокируемый пользователя.
      * @return возвращает объект новой блокировки.
-     * @throws UserNotFoundException выбрасывает если пользователь с указанным идентификатором не найден.
      * @throws BlockingAlreadyExistsException выбрасывает если такая блокировка уже существует.
      */
-    Blocking createBlocking(Long userId, Long blockedUserId) throws UserNotFoundException, BlockingAlreadyExistsException;
+    Blocking createBlocking(User user, User blockedUser) throws BlockingAlreadyExistsException;
 
     /**
      * Возвращает блокировку между пользователями по их идентификаторам.
-     * @param userId идентификатор пользователя инициировавшего блокировку.
-     * @param blockedUserId идентификатор заблокированного пользователя.
+     * @param user инициатор блокировки.
+     * @param blockedUser заблокированный пользователя.
      * @return Optional, содержащий найденную блокировку, или пустой Optional, если блокировка не найдена.
      */
-    Optional<Blocking> getBlockingByUsers(Long userId, Long blockedUserId);
+    Optional<Blocking> getBlockingByUsers(User user, User blockedUser);
 
     /**
      * Возвращает блокировку между пользователями по её указанному идентификатору.
@@ -40,11 +40,11 @@ public interface BlockingService {
 
     /**
      * Удаляет блокировку между пользователями по их идентификаторам.
-     * @param userId идентификатор пользователя инициировавшего блокировку.
-     * @param blockedUserId идентификатор заблокированного пользователя.
+     * @param user инициатор блокировки.
+     * @param blockedUser заблокированный пользователя.
      * @throws BlockingNotFoundException выбрасывается если блокировка не найдена.
      */
-    void deleteBlockingByUsers(Long userId, Long blockedUserId) throws BlockingNotFoundException;
+    void deleteBlockingByUsers(User user, User blockedUser) throws BlockingNotFoundException;
 
     /**
      * Удаляет блокировку между пользователями по её указанному идентификатору.
