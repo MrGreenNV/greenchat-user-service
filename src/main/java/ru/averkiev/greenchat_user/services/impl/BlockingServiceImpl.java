@@ -39,7 +39,7 @@ public class BlockingServiceImpl implements BlockingService {
         // Проверяет существование такой блокировки.
         if (blockingRepository.existsByUserAndBlockedUser(user, blockedUser)) {
             log.error("IN createBlocking - блокировка пользователя не создана");
-            throw new BlockingAlreadyExistsException("Блокировка пользователя: " + blockedUser + " уже существует");
+            throw new BlockingAlreadyExistsException("Блокировка пользователя: " + blockedUser.getLogin() + " уже существует");
         }
 
         Blocking blocking = new Blocking();
@@ -84,7 +84,7 @@ public class BlockingServiceImpl implements BlockingService {
         // Проверяет существование такой блокировки.
         if (!blockingRepository.existsByUserAndBlockedUser(user, blockedUser)) {
             log.error("IN deleteBlocking - блокировка пользователя не удалена");
-            throw new BlockingNotFoundException("Блокировка пользователя: " + blockedUser + " не найдена");
+            throw new BlockingNotFoundException("Блокировка пользователя: " + blockedUser.getLogin() + " не найдена");
         }
 
         blockingRepository.deleteByUserAndBlockedUser(user, blockedUser);
