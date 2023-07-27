@@ -1,6 +1,7 @@
 package ru.averkiev.greenchat_user.models;
 
 /**
+ * Класс представляющий возможные активности пользователя в системе.
  * @author mrGreenNV
  */
 public enum ActivityType {

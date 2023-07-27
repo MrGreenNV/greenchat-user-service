@@ -3,6 +3,7 @@ package ru.averkiev.greenchat_user.services;
 import ru.averkiev.greenchat_user.exceptions.ActivityLogNotFoundException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.ActivityLog;
+import ru.averkiev.greenchat_user.models.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,11 @@ public interface ActivityLogService {
 
     /**
      * Возвращает список всех активностей для указанного пользователя.
-     * @param userId идентификатор указанного пользователя.
+     * @param user пользователь.
      * @return список всех активностей.
      * @throws UserNotFoundException выбрасывает, если пользователь с указанным идентификатором не найден.
      */
-    List<ActivityLog> getAllActivityLogsForUser(Long userId) throws UserNotFoundException;
+    Optional<List<ActivityLog>> getAllActivityLogsForUser(User user) throws UserNotFoundException;
 
     /**
      * Удаляет запись об активности пользователя по её идентификатору.
