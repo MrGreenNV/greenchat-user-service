@@ -1,9 +1,10 @@
 package ru.averkiev.greenchat_user.models;
 
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+
 import java.util.Date;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Date;
 @Entity
 @Table(name = "activity_logs")
 @Data
+@DynamicInsert
 public class ActivityLog {
 
     /**
@@ -33,8 +35,8 @@ public class ActivityLog {
     /**
      * Дата и время проявления активности пользователя.
      */
-    @CreatedDate
     @Column(name = "active_at")
+    @CreationTimestamp
     private Date activeAt;
 
     /**
