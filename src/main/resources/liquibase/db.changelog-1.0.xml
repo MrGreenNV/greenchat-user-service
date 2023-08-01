@@ -23,13 +23,13 @@
             <column name="email" type="VARCHAR(255)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+            <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+            <column name="updated_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+            <column name="status" type="VARCHAR(25)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -43,13 +43,13 @@
             <column name="name" type="VARCHAR(100)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+            <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+            <column name="updated_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+            <column name="status" type="VARCHAR(25)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -116,7 +116,7 @@
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="active_at" type="TIMESTAMP" defaultValue="NOW()">
+            <column name="active_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="activity_type" type="VARCHAR(25)">
