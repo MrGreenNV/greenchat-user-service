@@ -3,10 +3,9 @@ package ru.averkiev.greenchat_user.models.dto.user;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.averkiev.greenchat_user.models.Role;
 import ru.averkiev.greenchat_user.models.Status;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Класс DTO для представления данных для аутентификации пользователя.
@@ -50,6 +49,6 @@ public class UserAuthDTO {
     /**
      * Список ролей пользователя.
      */
-    private List<Role> roles;
+    private Set<String> roles;
 
 }

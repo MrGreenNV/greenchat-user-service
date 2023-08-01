@@ -22,7 +22,7 @@ public class CustomModelMapper extends ModelMapper {
         addConverter(roleToSetStringConverter());
     }
     private Converter<List<Role>, Set<String>> roleToSetStringConverter() {
-        return new AbstractConverter<List<Role>, Set<String>>() {
+        return new AbstractConverter<>() {
             @Override
             protected Set<String> convert(List<Role> roles) {
                 return roles.stream()

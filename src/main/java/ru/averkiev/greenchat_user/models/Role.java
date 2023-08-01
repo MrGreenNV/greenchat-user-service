@@ -14,8 +14,8 @@ import java.util.List;
  * Класс представляет собой роли пользователя в системе.
  * @author mrGreenNV
  */
-@DynamicInsert
 @Entity
+@DynamicInsert
 @Table(name = "roles")
 @Data
 public class Role {
