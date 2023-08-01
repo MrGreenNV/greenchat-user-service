@@ -7,7 +7,7 @@ import ru.averkiev.greenchat_user.validation.CustomLogin;
 import ru.averkiev.greenchat_user.validation.CustomName;
 
 /**
- * Класс  DTO для создания нового пользователя.
+ * Класс DTO для создания нового пользователя.
  * Модель используется для передачи данных между различными слоями приложения.
  * @author mrGreenNV
  */
@@ -29,7 +29,7 @@ public class UserCreateDTO {
     /**
      * Хэшированное подтверждение пароля пользователя.
      */
-    private String ConfirmPassword;
+    private String confirmPassword;
 
     /**
      * Имя пользователя.

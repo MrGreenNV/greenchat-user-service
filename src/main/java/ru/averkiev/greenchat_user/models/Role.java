@@ -1,9 +1,11 @@
 package ru.averkiev.greenchat_user.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
  * Класс представляет собой роли пользователя в системе.
  * @author mrGreenNV
  */
+@DynamicInsert
 @Entity
 @Table(name = "roles")
 @Data
@@ -34,15 +37,15 @@ public class Role {
     /**
      * Дата и время создания роли.
      */
-    @CreatedDate
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
 
     /**
      * Дата и время обновления роли.
      */
-    @LastModifiedDate
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private Date updatedAt;
 
     /**
@@ -50,11 +53,12 @@ public class Role {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private Status status = Status.ACTIVE;
 
     /**
      * Список пользователей с данной ролью.
      */
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<User> users;
 }

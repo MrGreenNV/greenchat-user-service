@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@DynamicInsert
 @Table(name = "users")
 @NoArgsConstructor
 public class User {
@@ -82,15 +84,15 @@ public class User {
     /**
      * Дата и время создания пользователя.
      */
-    @CreatedDate
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
 
     /**
      * Дата и время обновления данных пользователя.
      */
-    @LastModifiedDate
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private Date updatedAt;
 
     /**
@@ -98,7 +100,7 @@ public class User {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private Status status = Status.ACTIVE;
 
     /**
      * Список ролей пользователя.
