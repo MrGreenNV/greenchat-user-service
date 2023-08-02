@@ -10,9 +10,11 @@ import ru.averkiev.greenchat_user.models.Role;
 import ru.averkiev.greenchat_user.models.Status;
 import ru.averkiev.greenchat_user.models.User;
 import ru.averkiev.greenchat_user.models.dto.user.*;
+import ru.averkiev.greenchat_user.repositories.RoleRepository;
 import ru.averkiev.greenchat_user.repositories.UserRepository;
 import ru.averkiev.greenchat_user.services.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,11 @@ public class UserServiceImpl implements UserService {
      * Репозиторий для обращения к базе данных.
      */
     private final UserRepository userRepository;
+
+    /**
+     * Репозиторий для обращения к базе данных.
+     */
+    private final RoleRepository roleRepository;
 
     /**
      * Регистрирует нового пользователя в системе.
@@ -70,6 +77,10 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationException(regEx.getMessage(), regEx);
 
         }
+
+        // Назначение пользователю роли по умолчанию.
+        user.setRoles(new ArrayList<>());
+        user.getRoles().add(roleRepository.findByRoleName("ROLE_USER").orElseThrow(() -> new RoleNotFoundException("Роль не найдена")));
 
         // Вызов метода сохранения пользователя.
         user = saveUser(user);

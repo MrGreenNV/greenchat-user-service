@@ -17,6 +17,11 @@ import java.util.Set;
 public class UserAuthDTO {
 
     /**
+     * Идентификатор пользователя.
+     */
+    private Long id;
+
+    /**
      * Имя пользователя для входа в систему - логин.
      */
     private String login;
