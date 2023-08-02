@@ -41,14 +41,24 @@ public class UserController {
         }
     }
 
+    /**
+     * API-endpoint для взаимодействия с микросервисом аутентификации и авторизации с целью проверки данных
+     * пользователя перед выдачей access и refresh токенов.
+     * @param username имя пользователя, для которого выполняется проверка.
+     * @return DTO пользователя с данными, необходимыми для проверки.
+     */
     @GetMapping("{username}")
     public ResponseEntity<UserAuthDTO> getUser(@PathVariable String username) {
+
+        // Получение пользователя по логину.
         User user = userService.getUserByLogin(username).orElse(null);
 
+        // Формирование ответа в случае, когда пользователь не был найден.
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
+        // Создание DTO пользователя для передачи сервису аутентификации.
         UserAuthDTO userAuthDTO = modelMapper.map(user, UserAuthDTO.class);
 
         return ResponseEntity.ok(userAuthDTO);
