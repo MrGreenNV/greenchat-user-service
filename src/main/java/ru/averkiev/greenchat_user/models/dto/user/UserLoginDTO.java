@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.averkiev.greenchat_user.models.Status;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Класс DTO для представления данных для аутентификации пользователя.
@@ -14,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ResponseBody
-public class UserAuthDTO {
+public class UserLoginDTO {
 
     /**
      * Идентификатор пользователя.
@@ -54,6 +54,6 @@ public class UserAuthDTO {
     /**
      * Список ролей пользователя.
      */
-    private Set<String> roles;
+    private List<String> roles;
 
 }
