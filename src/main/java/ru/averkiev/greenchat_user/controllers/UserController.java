@@ -3,12 +3,15 @@ package ru.averkiev.greenchat_user.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import ru.averkiev.greenchat_user.exceptions.RegistrationException;
 import ru.averkiev.greenchat_user.models.User;
-import ru.averkiev.greenchat_user.models.dto.user.UserAuthDTO;
+import ru.averkiev.greenchat_user.models.dto.user.UserLoginDTO;
 import ru.averkiev.greenchat_user.models.dto.user.UserCreateDTO;
 import ru.averkiev.greenchat_user.models.dto.user.UserRegistrationDTO;
+import ru.averkiev.greenchat_user.models.dto.user.UserUpdateDTO;
 import ru.averkiev.greenchat_user.services.impl.UserServiceImpl;
 import ru.averkiev.greenchat_user.utils.CustomModelMapper;
 
@@ -18,6 +21,7 @@ import ru.averkiev.greenchat_user.utils.CustomModelMapper;
 @RestController
 @RequestMapping("greenchat/users")
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class UserController {
 
     /**
@@ -25,6 +29,9 @@ public class UserController {
      */
     private final UserServiceImpl userService;
 
+    /**
+     * Кастомный ModelMapper.
+     */
     private final CustomModelMapper modelMapper;
 
     /**
@@ -48,7 +55,7 @@ public class UserController {
      * @return DTO пользователя с данными, необходимыми для проверки.
      */
     @GetMapping("{username}")
-    public ResponseEntity<UserAuthDTO> getUser(@PathVariable String username) {
+    public ResponseEntity<UserLoginDTO> getUserByLogin(@PathVariable String username) {
 
         // Получение пользователя по логину.
         User user = userService.getUserByLogin(username).orElse(null);
@@ -59,9 +66,21 @@ public class UserController {
         }
 
         // Создание DTO пользователя для передачи сервису аутентификации.
-        UserAuthDTO userAuthDTO = modelMapper.map(user, UserAuthDTO.class);
+        UserLoginDTO userLoginDTO = modelMapper.map(user, UserLoginDTO.class);
 
-        return ResponseEntity.ok(userAuthDTO);
+        return ResponseEntity.ok(userLoginDTO);
     }
 
+    /**
+     * API-endpoint для обновления сведений о пользователе.
+     * @param id идентификатор обновляемого пользователя.
+     * @param userUpdateDTO DTO пользователя с данными для обновления.
+     * @return DTO с обновлёнными данными.
+     */
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PutMapping("{id}")
+    public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long id,
+                                                    @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
+        return ResponseEntity.ok(userService.updateUser(id, userUpdateDTO));
+    }
 }
