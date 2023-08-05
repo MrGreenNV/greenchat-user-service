@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import ru.averkiev.greenchat_user.models.Role;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -21,12 +20,12 @@ public class CustomModelMapper extends ModelMapper {
         super();
         addConverter(roleToSetStringConverter());
     }
-    private Converter<List<Role>, Set<String>> roleToSetStringConverter() {
+    private Converter<List<Role>, List<String>> roleToSetStringConverter() {
         return new AbstractConverter<>() {
             @Override
-            protected Set<String> convert(List<Role> roles) {
+            protected List<String> convert(List<Role> roles) {
                 return roles.stream()
-                        .map(Role::getRoleName).collect(Collectors.toSet());
+                        .map(Role::getRoleName).collect(Collectors.toList());
             }
         };
     }
