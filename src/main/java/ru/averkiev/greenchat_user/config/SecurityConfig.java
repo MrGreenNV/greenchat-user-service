@@ -1,5 +1,6 @@
 package ru.averkiev.greenchat_user.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -7,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.averkiev.greenchat_user.utils.JwtFilter;
 
 /**
  * Класс представляет собой настройку безопасности системы
@@ -14,7 +17,13 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    /**
+     * Фильтр запросов
+     */
+    private final JwtFilter jwtFilter;
 
     /**
      * Позволяет выполнять фильтрацию endpoints, для ограничения аутентификации.
@@ -25,13 +34,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/greenchat/users/register").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/greenchat/users/register", "greenchat/users/{username}").permitAll()
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
+                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
