@@ -2,11 +2,13 @@ package ru.averkiev.greenchat_user.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import ru.averkiev.greenchat_user.exceptions.RegistrationException;
+import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.User;
 import ru.averkiev.greenchat_user.models.dto.user.UserLoginDTO;
 import ru.averkiev.greenchat_user.models.dto.user.UserCreateDTO;
@@ -82,5 +84,23 @@ public class UserController {
     public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long id,
                                                     @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
         return ResponseEntity.ok(userService.updateUser(id, userUpdateDTO));
+    }
+
+    /**
+     * API-endpoint для удаления пользователя из базы данных.
+     * @param id идентификатор удаляемого пользователя.
+     * @return статус удаления пользователя.
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (UserNotFoundException unfEx) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
