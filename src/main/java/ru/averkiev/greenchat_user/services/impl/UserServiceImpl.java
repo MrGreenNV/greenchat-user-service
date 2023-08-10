@@ -255,6 +255,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setStatus(Status.DELETED);
+        userRepository.save(user);
         log.info("IN softDeleteUser - пользователь успешно помечен под удаление");
 
         return modelMapper.map(user, UserStatusDTO.class);

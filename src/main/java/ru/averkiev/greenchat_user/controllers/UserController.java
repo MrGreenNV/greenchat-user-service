@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.averkiev.greenchat_user.exceptions.RegistrationException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.User;
-import ru.averkiev.greenchat_user.models.dto.user.UserLoginDTO;
-import ru.averkiev.greenchat_user.models.dto.user.UserCreateDTO;
-import ru.averkiev.greenchat_user.models.dto.user.UserRegistrationDTO;
-import ru.averkiev.greenchat_user.models.dto.user.UserUpdateDTO;
+import ru.averkiev.greenchat_user.models.dto.user.*;
 import ru.averkiev.greenchat_user.services.impl.UserServiceImpl;
 import ru.averkiev.greenchat_user.utils.CustomModelMapper;
+
+import java.util.List;
 
 /**
  * @author mrGreenNV
@@ -102,5 +101,49 @@ public class UserController {
         } catch (Exception ex) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    /**
+     * API-endpoint для "мягкого" удаления пользователя из базы данных.
+     * @param id идентификатор удаляемого пользователя.
+     * @return статус удаления пользователя.
+     */
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("{id}/soft")
+    public ResponseEntity<HttpStatus> softDeleteUser(@PathVariable Long id) {
+        try {
+            userService.softDeleteUser(id);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (UserNotFoundException unfEx) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * API-endpoint для получения информации о пользователе.
+     * @param id идентификатор пользователя.
+     * @return DTO пользователя с данными профиля.
+     */
+    @GetMapping("{id}/profile")
+    public ResponseEntity<UserProfileDTO> showUserProfile(@PathVariable Long id) {
+        UserProfileDTO userProfileDTO = modelMapper.map(userService.getUserById(id), UserProfileDTO.class);
+
+        if (userProfileDTO != null) {
+            return ResponseEntity.ok(userProfileDTO);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping
+    public ResponseEntity<List<UserProfileDTO>> showAllUsers() {
+        List<UserProfileDTO> userProfileDTOList = userService.getAllUsers().stream()
+                .map(user -> modelMapper.map(user, UserProfileDTO.class))
+                .toList();
+
+        return ResponseEntity.ok(userProfileDTOList);
     }
 }
