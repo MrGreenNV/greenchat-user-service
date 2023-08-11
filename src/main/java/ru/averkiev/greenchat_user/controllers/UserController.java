@@ -57,7 +57,6 @@ public class UserController {
      */
     @GetMapping("{username}")
     public ResponseEntity<UserLoginDTO> getUserByLogin(@PathVariable String username) {
-
         // Получение пользователя по логину.
         User user = userService.getUserByLogin(username).orElse(null);
 
