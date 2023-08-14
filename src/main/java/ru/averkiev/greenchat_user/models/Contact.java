@@ -1,5 +1,6 @@
 package ru.averkiev.greenchat_user.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class Contact {
     /**
      * Владелец данного контакта.
      */
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
