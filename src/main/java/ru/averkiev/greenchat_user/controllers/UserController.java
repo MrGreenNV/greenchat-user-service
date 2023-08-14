@@ -17,6 +17,7 @@ import ru.averkiev.greenchat_user.utils.CustomModelMapper;
 import java.util.List;
 
 /**
+ * Класс представляет собой контроллер для доступа и изменению информации о пользователях.
  * @author mrGreenNV
  */
 @RestController
@@ -74,27 +75,27 @@ public class UserController {
 
     /**
      * API-endpoint для обновления сведений о пользователе.
-     * @param id идентификатор обновляемого пользователя.
+     * @param userId идентификатор обновляемого пользователя.
      * @param userUpdateDTO DTO пользователя с данными для обновления.
      * @return DTO с обновлёнными данными.
      */
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    @PutMapping("{id}")
-    public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long id,
+    @PutMapping("{userId}")
+    public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long userId,
                                                     @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
-        return ResponseEntity.ok(userService.updateUser(id, userUpdateDTO));
+        return ResponseEntity.ok(userService.updateUser(userId, userUpdateDTO));
     }
 
     /**
      * API-endpoint для удаления пользователя из базы данных.
-     * @param id идентификатор удаляемого пользователя.
+     * @param userId идентификатор удаляемого пользователя.
      * @return статус удаления пользователя.
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id) {
+    @DeleteMapping("{userId}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long userId) {
         try {
-            userService.deleteUser(id);
+            userService.deleteUser(userId);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (UserNotFoundException unfEx) {
             return ResponseEntity.notFound().build();
@@ -105,14 +106,14 @@ public class UserController {
 
     /**
      * API-endpoint для "мягкого" удаления пользователя из базы данных.
-     * @param id идентификатор удаляемого пользователя.
+     * @param userId идентификатор удаляемого пользователя.
      * @return статус удаления пользователя.
      */
     @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("{id}/soft")
-    public ResponseEntity<HttpStatus> softDeleteUser(@PathVariable Long id) {
+    @DeleteMapping("{userId}/soft")
+    public ResponseEntity<HttpStatus> softDeleteUser(@PathVariable Long userId) {
         try {
-            userService.softDeleteUser(id);
+            userService.softDeleteUser(userId);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (UserNotFoundException unfEx) {
             return ResponseEntity.notFound().build();
@@ -123,12 +124,12 @@ public class UserController {
 
     /**
      * API-endpoint для получения информации о пользователе.
-     * @param id идентификатор пользователя.
+     * @param userId идентификатор пользователя.
      * @return DTO пользователя с данными профиля.
      */
-    @GetMapping("{id}/profile")
-    public ResponseEntity<UserProfileDTO> showUserProfile(@PathVariable Long id) {
-        UserProfileDTO userProfileDTO = modelMapper.map(userService.getUserById(id), UserProfileDTO.class);
+    @GetMapping("{userId}/profile")
+    public ResponseEntity<UserProfileDTO> showUserProfile(@PathVariable Long userId) {
+        UserProfileDTO userProfileDTO = modelMapper.map(userService.getUserById(userId), UserProfileDTO.class);
 
         if (userProfileDTO != null) {
             return ResponseEntity.ok(userProfileDTO);

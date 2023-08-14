@@ -86,7 +86,7 @@
 
     <changeSet id="1.0.5" author="mrGreenNV">
         <createTable tableName="contacts">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user_id" type="BIGINT">
