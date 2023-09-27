@@ -3,6 +3,7 @@ package ru.averkiev.greenchat_user.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.averkiev.greenchat_user.exceptions.*;
 import ru.averkiev.greenchat_user.models.Blocking;
@@ -26,6 +27,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    /** Сервис для взаимодействия с хэшированными паролями. */
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * ModelMapper для преобразования объектов DTO и объектов модели.
@@ -58,6 +62,7 @@ public class UserServiceImpl implements UserService {
 
             // Проверка на дублирование логина.
             if (existsUserByLogin(user.getLogin())) {
+                log.error("IN register - пользователь с именем: '{}' не был зарегистрирован", userCreateDTO.getLogin());
                 throw new UserWithLoginAlreadyExistsException("Данный логин уже зарегистрирован");
             }
 
@@ -68,6 +73,7 @@ public class UserServiceImpl implements UserService {
 
             // Проверка паролей.
             if (!userCreateDTO.getPassword().equals(userCreateDTO.getConfirmPassword())) {
+                log.error("IN register - пользователь с именем: '{}' не был зарегистрирован", userCreateDTO.getLogin());
                 throw new PasswordsNotMatchException("Пароли не совпадают");
             }
 
@@ -77,6 +83,9 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationException(regEx.getMessage(), regEx);
 
         }
+
+        // Хэширование пароля для безопасности хранения в базе данных.
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         // Назначение пользователю роли по умолчанию.
         user.setRoles(new ArrayList<>());
