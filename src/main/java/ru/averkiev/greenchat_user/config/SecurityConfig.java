@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.averkiev.greenchat_user.utils.JwtFilter;
@@ -42,6 +43,15 @@ public class SecurityConfig {
                 )
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
+    }
+
+    /**
+     * Позволяет создать bean BCryptPasswordEncoder.
+     * @return новый объект BCryptPasswordEncoder.
+     */
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

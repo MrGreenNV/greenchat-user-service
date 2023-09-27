@@ -137,6 +137,10 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    /**
+     * API-endpoint для получения информации о всех пользователях.
+     * @return список с данными пользователей.
+     */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserProfileDTO>> showAllUsers() {

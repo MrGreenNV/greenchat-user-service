@@ -32,11 +32,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
 
+    /**
+     * Сервис для взаимодействия с аутентификацией.
+     */
     private final AuthenticationServiceImpl authenticationService;
 
+    /**
+     * Константа заголовка HTTP.
+     */
     private static final String AUTHORIZATION = "Authorization";
 
 
+    /**
+     * Устанавливает аутентификацию в контекст на основании токена из запроса.
+     * @param request запрос
+     * @param response ответ.
+     * @param chain фильтр.
+     * @throws IOException выбрасывает если возникает ошибка ввода
+     * @throws ServletException выбрасывает если возникает ошибка при работе с запросом.
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -53,8 +67,33 @@ public class JwtFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+        this.doFilterInternal(request, response, chain);
+
         // Продолжение выполнения цепочки фильтров.
         chain.doFilter(request, response);
+    }
+
+    /**
+     * Обновляет токены, если у них подходит срок окончания действия.
+     * @param request запрос
+     * @param response ответ.
+     * @param filterChain фильтр.
+     * @throws IOException выбрасывает если возникает ошибка ввода
+     * @throws ServletException выбрасывает если возникает ошибка при работе с запросом.
+     */
+    public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        // Извлечение токена из запроса.
+        String token = getTokenFromRequest((HttpServletRequest) request);
+
+        if (token != null) {
+            if (authenticationService.isAccessTokenExpired(token)) {
+                System.out.println("В ЭТОМ МЕСТЕ ОБНОВЛЯЕМ ТОКЕНЫ");
+            }
+        }
+
+        filterChain.doFilter(request, response);
     }
 
     /**
