@@ -3,6 +3,7 @@ package ru.averkiev.greenchat_user.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.averkiev.greenchat_user.exceptions.ActivityLogNotDataException;
 import ru.averkiev.greenchat_user.exceptions.ActivityLogNotFoundException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.ActivityLog;
@@ -28,14 +29,15 @@ public class ActivityLogServiceImpl implements ActivityLogService {
      * Создаёт новую запись об активности пользователя.
      * @param activityLog запись об активности пользователя
      * @return созданная запись об активности.
+     * @throws ActivityLogNotDataException, выбрасывает, если для создания записи активности недостаточно данных.
      */
     @Override
-    public ActivityLog createActivityLog(ActivityLog activityLog) {
+    public ActivityLog createActivityLog(ActivityLog activityLog) throws ActivityLogNotDataException {
 
-        // Проверка, что запись не содержит необходимые данные.
+        // Проверка, что запись содержит необходимые данные.
         if (activityLog.getUser() == null || activityLog.getActivityType() == null) {
             log.error("IN createActivityLog - запись не сохранена");
-            throw new ActivityLogNotFoundException("В записи недостаточно данных для сохранения");
+            throw new ActivityLogNotDataException("В записи недостаточно данных для сохранения");
         }
 
         log.info("IN createActivityLog - запись успешно сохранена");
@@ -46,7 +48,8 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     /**
      * Возвращает запись об активности по идентификатору.
      * @param activityLogId идентификатор записи об активности.
-     * @return Optional, содержащий найденную запись об активности или пустой, если запись не найдена.
+     * @return запись об активности пользователя.
+     * @exception ActivityLogNotFoundException выбрасывает, если запись об активности не найдена.
      */
     @Override
     public ActivityLog getActivityLogById(Long activityLogId) throws ActivityLogNotFoundException {

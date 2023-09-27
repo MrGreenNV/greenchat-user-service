@@ -1,12 +1,12 @@
 package ru.averkiev.greenchat_user.services;
 
+import ru.averkiev.greenchat_user.exceptions.ActivityLogNotDataException;
 import ru.averkiev.greenchat_user.exceptions.ActivityLogNotFoundException;
 import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.ActivityLog;
 import ru.averkiev.greenchat_user.models.User;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Интерфейс определяет функциональность для управления записями активностей пользователей.
@@ -18,6 +18,7 @@ public interface ActivityLogService {
      * Создаёт новую запись об активности пользователя.
      * @param activityLog запись об активности пользователя
      * @return созданная запись об активности.
+     * @throws ActivityLogNotDataException, выбрасывает, если для создания записи активности недостаточно данных.
      */
     ActivityLog createActivityLog(ActivityLog activityLog);
 
@@ -25,7 +26,7 @@ public interface ActivityLogService {
      * Возвращает запись об активности по идентификатору.
      * @param activityLogId идентификатор записи об активности.
      * @return запись об активности пользователя.
-     * @exception ActivityLogNotFoundException выбрасывает, если запись не найдена.
+     * @exception ActivityLogNotFoundException выбрасывает, если запись об активности не найдена.
      */
     ActivityLog getActivityLogById(Long activityLogId) throws ActivityLogNotFoundException;
 

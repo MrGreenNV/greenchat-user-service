@@ -2,11 +2,8 @@ package ru.averkiev.greenchat_user.services;
 
 import ru.averkiev.greenchat_user.exceptions.BlockingAlreadyExistsException;
 import ru.averkiev.greenchat_user.exceptions.BlockingNotFoundException;
-import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.Blocking;
 import ru.averkiev.greenchat_user.models.User;
-
-import java.util.Optional;
 
 /**
  * Интерфейс определяет функциональность для управления блокировками между пользователями.
@@ -27,16 +24,18 @@ public interface BlockingService {
      * Возвращает блокировку между пользователями по их идентификаторам.
      * @param user инициатор блокировки.
      * @param blockedUser заблокированный пользователя.
-     * @return Optional, содержащий найденную блокировку, или пустой Optional, если блокировка не найдена.
+     * @return найденная блокировка
+     * @throws BlockingNotFoundException выбрасывает, если блокировка не найдена.
      */
-    Optional<Blocking> getBlockingByUsers(User user, User blockedUser);
+    Blocking getBlockingByUsers(User user, User blockedUser) throws BlockingNotFoundException;
 
     /**
      * Возвращает блокировку между пользователями по её указанному идентификатору.
      * @param blockingId идентификатор указанной блокировки.
-     * @return Optional, содержащий найденную блокировку, или пустой Optional, если блокировка не найдена.
+     * @return найденная блокировка
+     * @throws BlockingNotFoundException выбрасывает, если блокировка не найдена.
      */
-    Optional<Blocking> getBlockingById(Long blockingId);
+    Blocking getBlockingById(Long blockingId) throws BlockingNotFoundException;
 
     /**
      * Удаляет блокировку между пользователями по их идентификаторам.

@@ -55,21 +55,37 @@ public class BlockingServiceImpl implements BlockingService {
      * Возвращает блокировку между пользователями по их идентификаторам.
      * @param user инициатор блокировки.
      * @param blockedUser заблокированный пользователя.
-     * @return Optional, содержащий найденную блокировку, или пустой Optional, если блокировка не найдена.
+     * @return найденная блокировка
+     * @throws BlockingNotFoundException выбрасывает, если блокировка не найдена.
      */
     @Override
-    public Optional<Blocking> getBlockingByUsers(User user, User blockedUser) {
-        return blockingRepository.findByUserAndBlockedUser(user, blockedUser);
+    public Blocking getBlockingByUsers(User user, User blockedUser) {
+        Optional<Blocking> blocking = blockingRepository.findByUserAndBlockedUser(user, blockedUser);
+        if (blocking.isEmpty()) {
+            log.error("IN getBlockingByUsers - блокировка между пользователями {} и {} не найдена", user.getLogin(), blockedUser.getLogin());
+            throw new BlockingNotFoundException("Блокировка между указанными не найдена");
+        }
+
+        log.info("IN getBlockingByUsers - блокировка между пользователями {} и {} успешно найдена", user.getLogin(), blockedUser.getLogin());
+        return blocking.get();
     }
 
     /**
      * Возвращает блокировку между пользователями по её указанному идентификатору.
      * @param blockingId идентификатор указанной блокировки.
-     * @return Optional, содержащий найденную блокировку, или пустой Optional, если блокировка не найдена.
+     * @return найденная блокировка
+     * @throws BlockingNotFoundException выбрасывает, если блокировка не найдена.
      */
     @Override
-    public Optional<Blocking> getBlockingById(Long blockingId) {
-        return blockingRepository.findById(blockingId);
+    public Blocking getBlockingById(Long blockingId) {
+        Optional<Blocking> blocking = blockingRepository.findById(blockingId);
+        if (blocking.isEmpty()) {
+            log.error("IN getBlockingById - блокировка с идентификатором: {} не найдена", blockingId);
+            throw new BlockingNotFoundException("Блокировка с указанным идентификатором не найдена");
+        }
+
+        log.info("IN getBlockingById - блокировка с идентификатором: {} успешно найдена", blockingId);
+        return blocking.get();
     }
 
     /**
