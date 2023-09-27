@@ -24,9 +24,10 @@ public interface ActivityLogService {
     /**
      * Возвращает запись об активности по идентификатору.
      * @param activityLogId идентификатор записи об активности.
-     * @return Optional, содержащий найденную запись об активности или пустой, если запись не найдена.
+     * @return запись об активности пользователя.
+     * @exception ActivityLogNotFoundException выбрасывает, если запись не найдена.
      */
-    Optional<ActivityLog> getActivityLogById(Long activityLogId);
+    ActivityLog getActivityLogById(Long activityLogId) throws ActivityLogNotFoundException;
 
     /**
      * Возвращает список всех активностей для указанного пользователя.
@@ -34,7 +35,7 @@ public interface ActivityLogService {
      * @return список всех активностей.
      * @throws UserNotFoundException выбрасывает, если пользователь с указанным идентификатором не найден.
      */
-    Optional<List<ActivityLog>> getAllActivityLogsForUser(User user) throws UserNotFoundException;
+    List<ActivityLog> getAllActivityLogsForUser(User user) throws UserNotFoundException;
 
     /**
      * Удаляет запись об активности пользователя по её идентификатору.

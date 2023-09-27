@@ -38,6 +38,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
             throw new ActivityLogNotFoundException("В записи недостаточно данных для сохранения");
         }
 
+        log.info("IN createActivityLog - запись успешно сохранена");
         activityLog = activityLogRepository.save(activityLog);
         return activityLog;
     }
@@ -48,8 +49,15 @@ public class ActivityLogServiceImpl implements ActivityLogService {
      * @return Optional, содержащий найденную запись об активности или пустой, если запись не найдена.
      */
     @Override
-    public Optional<ActivityLog> getActivityLogById(Long activityLogId) {
-        return activityLogRepository.findById(activityLogId);
+    public ActivityLog getActivityLogById(Long activityLogId) throws ActivityLogNotFoundException {
+        Optional<ActivityLog> activityLog = activityLogRepository.findById(activityLogId);
+        if (activityLog.isEmpty()) {
+            log.error("IN getActivityLogById - активность пользователя с идентификатором: {} не найдена", activityLogId);
+            throw new ActivityLogNotFoundException("Активность пользователя не найдена");
+        }
+
+        log.info("IN getActivityLogById - активность пользователя с идентификатором: {} успешно найдена", activityLogId);
+        return activityLog.get();
     }
 
     /**
@@ -59,8 +67,15 @@ public class ActivityLogServiceImpl implements ActivityLogService {
      * @throws UserNotFoundException выбрасывает, если пользователь с указанным идентификатором не найден.
      */
     @Override
-    public Optional<List<ActivityLog>> getAllActivityLogsForUser(User user) throws UserNotFoundException {
-        return activityLogRepository.findByUser(user);
+    public List<ActivityLog> getAllActivityLogsForUser(User user) throws UserNotFoundException {
+        Optional<List<ActivityLog>> activityLogs = activityLogRepository.findByUser(user);
+        if (activityLogs.isEmpty()) {
+            log.error("IN getAllActivityLogsForUser - активности для пользователя: {} не найдены", user.getLogin());
+            throw new UserNotFoundException("Активности для пользователя не найдены");
+        }
+
+        log.info("IN getAllActivityLogsForUser - активности для пользователя: {} успешно найдены", user.getLogin());
+        return activityLogs.get();
     }
 
     /**
