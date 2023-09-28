@@ -10,7 +10,6 @@ import ru.averkiev.greenchat_user.models.User;
 import ru.averkiev.greenchat_user.models.dto.user.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Интерфейс определяет функциональность для управления пользователями.
@@ -35,16 +34,18 @@ public interface UserService {
     /**
      * Возвращает пользователя по его идентификатору.
      * @param userId идентификатор искомого пользователя.
-     * @return Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
+     * @return найденного пользователя.
+     * @throws UserNotFoundException – выбрасывает если пользователь с указанным идентификатором не найден.
      */
-    Optional<User> getUserById(Long userId);
+    User getUserById(Long userId) throws UserNotFoundException;
 
     /**
      * Возвращает пользователя по его логину.
      * @param login логин пользователя.
-     * @return Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
+     * @return найденного пользователя.
+     * @throws UserNotFoundException – выбрасывает если пользователь с указанным идентификатором не найден.
      */
-    Optional<User> getUserByLogin(String login);
+    User getUserByLogin(String login) throws UserNotFoundException;
 
     /**
      * Обновляет информацию о пользователе с указанным идентификатором.

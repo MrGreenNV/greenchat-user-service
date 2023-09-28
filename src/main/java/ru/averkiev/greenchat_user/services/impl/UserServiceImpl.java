@@ -114,21 +114,38 @@ public class UserServiceImpl implements UserService {
     /**
      * Возвращает пользователя по его идентификатору.
      * @param userId идентификатор искомого пользователя.
-     * @return Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
+     * @return найденного пользователя.
+     * @throws UserNotFoundException – выбрасывает если пользователь с указанным идентификатором не найден.
      */
     @Override
-    public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
+    public User getUserById(Long userId) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            log.error("IN getUserByLogin - пользователь с идентификатором: {} не найден", userId);
+            throw new UserNotFoundException("Пользователь не найден");
+        }
+
+        log.info("IN getUserByLogin - пользователь с идентификатором: {} успешно найден", userId);
+        return user.get();
     }
 
     /**
      * Возвращает пользователя по его логину.
      * @param login логин пользователя.
-     * @return Optional, содержащий найденного пользователя, или пустой Optional, если пользователь не найден.
+     * @return найденного пользователя.
+     * @throws UserNotFoundException – выбрасывает если пользователь с указанным идентификатором не найден.
      */
     @Override
-    public Optional<User> getUserByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public User getUserByLogin(String login) throws UserNotFoundException {
+
+        Optional<User> user = userRepository.findByLogin(login);
+        if (user.isEmpty()) {
+            log.error("IN getUserByLogin - пользователь с логином: {} не найден", login);
+            throw new UserNotFoundException("Пользователь не найден");
+        }
+
+        log.info("IN getUserByLogin - пользователь с логином: {} успешно найден", login);
+        return user.get();
     }
 
     /**
@@ -142,13 +159,7 @@ public class UserServiceImpl implements UserService {
     public UserUpdateDTO updateUser(Long userId, UserUpdateDTO userUpdateDTO) throws UserNotFoundException {
 
         // Поиск обновляемого пользователя. Если такого нет - возвращает null;
-        User user = getUserById(userId).orElse(null);
-
-        // Обработка поиска в случае, если пользователь не найден.
-        if (user == null) {
-            log.error("IN updateUser - пользователь с id {} не найден.", userId);
-            throw new UserNotFoundException("Пользователь с id: " + userId + " не найден");
-        }
+        User user = getUserById(userId);
 
         // Получение объекта User из DTO.
         User updateUser = modelMapper.map(userUpdateDTO, User.class);
@@ -195,13 +206,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserPassword(Long userId, UserUpdatePasswordDTO userUpdatePasswordDTO) throws UserNotFoundException, PasswordsNotMatchException {
 
         // Поиск обновляемого пользователя. Если такого нет - возвращает null;
-        User user = getUserById(userId).orElse(null);
-
-        // Обработка поиска в случае, если пользователь не найден.
-        if (user == null) {
-            log.error("IN updatePassword - пароль не обновлён");
-            throw new UserNotFoundException("Пользователь с id: " + userId + " не найден");
-        }
+        User user = getUserById(userId);
 
         // Проверка на корректность текущего пароля.
         if (!userUpdatePasswordDTO.getCurrentPassword().equals(user.getPassword())) {
@@ -236,13 +241,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
 
         // Поиск удаляемого пользователя. Если такого нет - возвращает null;
-        User user = getUserById(userId).orElse(null);
-
-        // Обработка поиска в случае, если пользователь не найден.
-        if (user == null) {
-            log.error("IN updateUser - пользователь с id {} не удалён. ", userId);
-            throw new UserNotFoundException("Пользователь с id: " + userId + " не найден");
-        }
+        User user = getUserById(userId);
 
         userRepository.delete(user);
         log.info("IN deleteUser - пользователь полностью удален");
@@ -255,13 +254,7 @@ public class UserServiceImpl implements UserService {
     public UserStatusDTO softDeleteUser(Long userId) {
 
         // Поиск удаляемого пользователя. Если такого нет - возвращает null;
-        User user = getUserById(userId).orElse(null);
-
-        // Обработка поиска в случае, если пользователь не найден.
-        if (user == null) {
-            log.error("IN updateUser - пользователь с id {} не найден.", userId);
-            throw new UserNotFoundException("Пользователь с id: " + userId + " не найден");
-        }
+        User user = getUserById(userId);
 
         user.setStatus(Status.DELETED);
         userRepository.save(user);
@@ -287,13 +280,7 @@ public class UserServiceImpl implements UserService {
     public List<Role> getRolesByLogin(String login) throws UserNotFoundException {
 
         // Поиск пользователя по имени.
-        User user = getUserByLogin(login).orElse(null);
-
-        // Случай, когда пользователь не найден.
-        if (user == null) {
-            log.error("IN getRolesByLogin - поиск ролей завершён с ошибкой");
-            throw new UserNotFoundException("Пользователь с логином: " + login + " не найден");
-        }
+        User user = getUserByLogin(login);
 
         log.info("IN getRolesByLogin - поиск ролей успешно завершён");
         return user.getRoles();
