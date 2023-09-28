@@ -251,7 +251,7 @@ public class UserServiceImpl implements UserService {
      * Помечает пользователя удалённым, но не удаляет физически.
      * @param userId идентификатор пользователя.
      */
-    public UserStatusDTO softDeleteUser(Long userId) {
+    public void softDeleteUser(Long userId) {
 
         // Поиск удаляемого пользователя. Если такого нет - возвращает null;
         User user = getUserById(userId);
@@ -260,7 +260,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("IN softDeleteUser - пользователь успешно помечен под удаление");
 
-        return modelMapper.map(user, UserStatusDTO.class);
     }
 
     /**

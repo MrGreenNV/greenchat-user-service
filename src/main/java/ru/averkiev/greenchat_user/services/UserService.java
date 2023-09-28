@@ -73,9 +73,8 @@ public interface UserService {
     /**
      * Помечает пользователя удалённым, но не удаляет физически.
      * @param userId идентификатор пользователя.
-     * @return DTO объект с информацией о статусе
      */
-    UserStatusDTO softDeleteUser(Long userId);
+    void softDeleteUser(Long userId);
 
     /**
      * Возвращает список всех пользователей.
