@@ -4,10 +4,8 @@ import ru.averkiev.greenchat_user.exceptions.RoleAlreadyExistsException;
 import ru.averkiev.greenchat_user.exceptions.RoleNotFoundException;
 import ru.averkiev.greenchat_user.models.Role;
 import ru.averkiev.greenchat_user.models.User;
-import ru.averkiev.greenchat_user.models.dto.user.UserStatusDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Интерфейс определяет функциональность для управления ролями пользователей в системе.
@@ -43,22 +41,25 @@ public interface RoleService {
      * Помечает роль удалённой, но не удаляет физически.
      * @param roleId идентификатор роли.
      * @return роль с измененным статусом.
+     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
      */
     Role softDeleteRole(Long roleId) throws RoleNotFoundException;
 
     /**
      * Возвращает роль по указанному идентификатору.
      * @param roleId указанный идентификатор роли.
-     * @return Optional, содержащий найденную роль, или пустой Optional, если роль не найдена.
+     * @return найденная роль пользователя.
+     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
      */
-    Optional<Role> getRoleById(Long roleId);
+    Role getRoleById(Long roleId) throws RoleNotFoundException;
 
     /**
      * Возвращает роль по указанному имени.
      * @param roleName указанное имя роли.
-     * @return Optional, содержащий найденную роль, или пустой Optional, если роль не найдена.
+     * @return найденная роль пользователя.
+     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
      */
-    Optional<Role> getRoleByName(String roleName);
+    Role getRoleByName(String roleName) throws RoleNotFoundException;
 
     /**
      * Возвращает список всех ролей.

@@ -65,13 +65,7 @@ public class RoleServiceImpl implements RoleService {
     public Role updateRole(Long roleId, String roleName) throws RoleNotFoundException {
 
         // Получение роли по идентификатору из базы данных.
-        Role role = getRoleById(roleId).orElse(null);
-
-        // Случай, когда роль не найдена по идентификатору.
-        if (role == null) {
-            log.error("IN updateRole - роль не обновлена из за ошибки.");
-            throw new RoleNotFoundException("Роль с id: " + roleId + " не найдена");
-        }
+        Role role = getRoleById(roleId);
 
         // Проверка на пустое значение и совпадение с уже существующими ролями.
         if (roleName != null && !existsRoleByName(roleName)) {
@@ -96,13 +90,7 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRole(Long roleId) throws RoleNotFoundException {
 
         // Получение роли по идентификатору из базы данных.
-        Role role = getRoleById(roleId).orElse(null);
-
-        // Случай, когда роль не найдена по идентификатору.
-        if (role == null) {
-            log.error("IN deleteRole - роль не удалена из за ошибки.");
-            throw new RoleNotFoundException("Роль с id: " + roleId + " не найдена");
-        }
+        Role role = getRoleById(roleId);
 
         roleRepository.delete(role);
         log.info("IN deleteRole - роль успешно удалена");
@@ -112,18 +100,14 @@ public class RoleServiceImpl implements RoleService {
     /**
      * Помечает роль удалённой, но не удаляет физически.
      * @param roleId идентификатор роли.
+     * @return роль с измененным статусом.
+     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
      */
     @Override
     public Role softDeleteRole(Long roleId) throws RoleNotFoundException {
 
         // Получение роли по идентификатору из базы данных.
-        Role role = getRoleById(roleId).orElse(null);
-
-        // Случай, когда роль не найдена по идентификатору.
-        if (role == null) {
-            log.error("IN softDeleteRole - роль не помечена удалённой из за ошибки.");
-            throw new RoleNotFoundException("Роль с id: " + roleId + " не найдена");
-        }
+        Role role = getRoleById(roleId);
 
         role.setStatus(Status.DELETED);
         role = roleRepository.save(role);
@@ -135,21 +119,39 @@ public class RoleServiceImpl implements RoleService {
     /**
      * Возвращает роль по указанному идентификатору.
      * @param roleId указанный идентификатор роли.
-     * @return Optional, содержащий найденную роль, или пустой Optional, если роль не найдена.
+     * @return найденная роль пользователя.
+     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
      */
     @Override
-    public Optional<Role> getRoleById(Long roleId) {
-        return roleRepository.findById(roleId);
+    public Role getRoleById(Long roleId) throws RoleNotFoundException {
+
+        Optional<Role> role = roleRepository.findById(roleId);
+        if (role.isEmpty()) {
+            log.error("IN getRoleByID - роль с идентификатором: {} не найдена", roleId);
+            throw new RoleNotFoundException("Роль не найдена");
+        }
+
+        log.info("IN getRoleById - роль с идентификатором: {} успешно найдена", roleId);
+        return role.get();
     }
 
     /**
      * Возвращает роль по указанному имени.
      * @param roleName указанное имя роли.
-     * @return Optional, содержащий найденную роль, или пустой Optional, если роль не найдена.
+     * @return найденная роль пользователя.
+     * @throws RoleNotFoundException выбрасывается, если роль с таким идентификатором не найдена.
      */
     @Override
-    public Optional<Role> getRoleByName(String roleName) {
-        return roleRepository.findByRoleName(roleName);
+    public Role getRoleByName(String roleName) throws RoleNotFoundException {
+
+        Optional<Role> role = roleRepository.findByRoleName(roleName);
+        if (role.isEmpty()) {
+            log.error("IN getRoleByName - роль с наименованием: {} не найдена", roleName);
+            throw new RoleNotFoundException("Роль не найдена");
+        }
+
+        log.info("IN getRoleByName - роль с наименованием: {} успешно найдена", roleName);
+        return role.get();
     }
 
     /**
@@ -171,13 +173,7 @@ public class RoleServiceImpl implements RoleService {
     public List<User> getUsersByRole(String roleName) throws RoleNotFoundException {
 
         // Поиск роли по имени.
-        Role role = getRoleByName(roleName).orElse(null);
-
-        // Случай, если роль не найдена.
-        if (role == null) {
-            log.error("IN getUserRoles - поиск завершён с ошибкой");
-            throw new RoleNotFoundException("Роль с названием: " + roleName + " не найдена");
-        }
+        Role role = getRoleByName(roleName);
 
         log.info("IN getUserRoles - поиск пользователей успешно завершён");
         return role.getUsers();
@@ -190,6 +186,6 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public boolean existsRoleByName(String roleName) {
-        return getRoleByName(roleName).isPresent();
+        return roleRepository.findByRoleName(roleName).isPresent();
     }
 }
