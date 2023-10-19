@@ -153,6 +153,34 @@ components:
           description: Электронная почта пользователя.
           example: john_smith@gmail.com
 
+    UserContactDTO:
+      description: Данные пользователя для контакта.
+      type: object
+      properties:
+        login:
+          type: string
+          description: Логин пользователя.
+          example: New_User15
+        firstname:
+          type: string
+          description: Имя пользователя.
+          example: Джон, John
+        lastname:
+          type: string
+          description: Фамилия пользователя.
+          example: Смит, Smith
+        email:
+          type: string
+          description: Электронная почта пользователя.
+          example: john_smith@gmail.com
+
+    ContactDTO:
+      description: Данные контакта.
+      type: object
+      properties:
+        UserContactDTO:
+          $ref: '#/components/schemas/UserContactDTO'
+
     ErrorResponse:
       description: Ответ сервера в случае возникновения ошибки.
       type: object
@@ -424,6 +452,117 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserProfileDTO'
                 description: Данные пользователя.
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{userId}/contacts:
+    post:
+      tags:
+        - Управление контактами пользователей.
+      summary: Новый контакт.
+      description: Устанавливает с текущим пользователем новый контакт.
+      security:
+        - JwtAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор пользователя.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              description: Логин контакта
+              example: Contact_Login
+      responses:
+        '200':
+          description: Контакт успешно добавлен.
+        '400':
+          description: Ошибка при добавлении контакта.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Управление контактами пользователей.
+      summary: Список контактов.
+      description: Получает список всех контактов пользователя.
+      security:
+        - JwtAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор пользователя.
+      responses:
+        '200':
+          description: Список контактов успешно получен.
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{userId}/contacts/{contactId}:
+    delete:
+      tags:
+        - Управление контактами пользователей.
+      summary: Удаление контакта.
+      description: Получает список всех контактов пользователя.
+      security:
+        - JwtAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор пользователя.
+        - in: path
+          name: contactId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор удаляемого контакта.
+      responses:
+        '200':
+          description: Список контактов успешно получен.
         '401':
           description: Недостаточно прав для доступа к данным.
           content:

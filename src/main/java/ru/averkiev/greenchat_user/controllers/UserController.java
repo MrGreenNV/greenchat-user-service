@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 import ru.averkiev.greenchat_user.models.User;
 import ru.averkiev.greenchat_user.models.dto.user.*;
-import ru.averkiev.greenchat_user.services.impl.UserServiceImpl;
+import ru.averkiev.greenchat_user.services.UserService;
 import ru.averkiev.greenchat_user.utils.CustomModelMapper;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class UserController {
     /**
      * Сервис для управления пользователями.
      */
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     /**
      * Кастомный ModelMapper.
