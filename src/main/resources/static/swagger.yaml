@@ -1,0 +1,438 @@
+openapi: 3.0.0
+info:
+  title: User Service Green_Chat App
+  description: Микросервис управления пользователями, позволяет клиенту взаимодействовать с данными пользователей системы Green_Chat.
+    Микросервис способен осуществить регистрацию пользователей, обновить или удалить данные пользователей, а также установить пользовательскую связь.
+  contact:
+    name: mrGreenNV
+    email: averkievnv@gmail.com
+    url: https://github.com/MrGreenNV
+  version: 0.1.0
+
+
+components:
+
+  securitySchemes:
+    JwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    UserRegistrationDTO:
+      description: Данные пользователя. 
+        Направляются клиенту при регистрации нового пользователя.
+        Содержат - логин, имя и фамилию, электронную почту.
+      type: object
+      properties:
+        login:
+          type: string
+          description: Логин пользователя.
+          example: New_User15
+        firstname:
+          type: string
+          description: Имя пользователя.
+          example: Джон, John
+        lastname:
+          type: string
+          description: Фамилия пользователя.
+          example: Смит, Smith
+        email:
+          type: string
+          description: Электронная почта пользователя.
+          example: john_smith@gmail.com
+
+    UserCreateDTO:
+      description: Данные пользователя, необходимые для регистрации нового пользователя в системе.
+      type: object
+      properties:
+        login:
+          type: string
+          description: Логин пользователя.
+          example: John_Smith15
+        password:
+          type: string
+          description: Хэшированный пароль пользователя.
+        confirmPassword:
+          description: Хэшированное подтверждение пароля пользователя.
+        firstname:
+          type: string
+          description: Имя пользователя.
+          example: Джон, John
+        lastname:
+          type: string
+          description: Фамилия пользователя.
+          example: Смит, Smith
+        email:
+          type: string
+          description: Электронная почта пользователя.
+          example: john_smith@gmail.com
+
+    UserLoginDTO:
+      description: Данные пользователя передаваемые микросервису аутентификации при запросе по логину.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор пользователя.
+          example: 100500
+        login:
+          type: string
+          description: Логин пользователя.
+          example: John_Smith15
+        password:
+          type: string
+          description: Хэшированный пароль пользователя.
+        firstname:
+          type: string
+          description: Имя пользователя.
+          example: Джон, John
+        lastname:
+          type: string
+          description: Фамилия пользователя.
+          example: Смит, Smith
+        email:
+          type: string
+          description: Электронная почта пользователя.
+          example: john_smith@gmail.com
+        status:
+          type: string
+          description: Статус пользователя в системе.
+          example: ACTIVE, NOT_ACTIVE, DELETED
+        roles:
+          type: array
+          items:
+            type: string
+            description: Роль пользователя в системе.
+            example: ROLE_ADMIN, ROLE_USER
+
+    UserUpdateDTO:
+      description: Данные пользователя для обновления сохраненных данных.
+      type: object
+      properties:
+        login:
+          type: string
+          description: Логин пользователя.
+          example: New_User15
+        firstname:
+          type: string
+          description: Имя пользователя.
+          example: Джон, John
+        lastname:
+          type: string
+          description: Фамилия пользователя.
+          example: Смит, Smith
+        email:
+          type: string
+          description: Электронная почта пользователя.
+          example: john_smith@gmail.com
+
+    UserProfileDTO:
+      description: Данные пользователя для отображения информации о пользователе.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор пользователя.
+          example: 100500
+        login:
+          type: string
+          description: Логин пользователя.
+          example: New_User15
+        firstname:
+          type: string
+          description: Имя пользователя.
+          example: Джон, John
+        lastname:
+          type: string
+          description: Фамилия пользователя.
+          example: Смит, Smith
+        email:
+          type: string
+          description: Электронная почта пользователя.
+          example: john_smith@gmail.com
+
+    ErrorResponse:
+      description: Ответ сервера в случае возникновения ошибки.
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Временная метка, когда произошла ошибка. Формат = yyyy-MM-dd HH:mm:ss.
+          example: 2023-09-20 12:12:50
+        status:
+          type: string
+          description: HTTP статус ошибки.
+          example: Код ошибки.
+        error:
+          type: string
+          description: Краткое описание ошибки.
+          example: Тип ошибки.
+        errorMessage:
+          type: string
+          description: Сообщение об ошибке.
+          example: Описание ошибки.
+        path:
+          type: string
+          description: Путь к ресурсу, который вызвал ошибку.
+        errors:
+          type: object
+          description: Список накопленных ошибок при валидации данных.
+
+servers:
+  - url: http://localhost:9191/greenchat/user-service/v1
+    description: Локальный сервер для управления пользователями.
+      Предоставляет сервис по регистрации новых пользователей, обновления сохраненной информации,
+      получению данных пользователей и удалению этих данных, а также управление контактами пользователей.
+
+paths:
+
+  /users/registration:
+    post:
+      tags:
+        - Управление пользователями.
+      summary: Регистрирует нового пользователя.
+      description: Принимает от клиента данные, необходимые для создания нового пользователя,
+        Создает и сохраняет данные нового пользователя. В ответ направляет клиенту данные 
+        созданного пользователя.
+      requestBody:
+        required: true
+        description: Данные для регистрации нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateDTO'
+      responses:
+        '200':
+          description: Регистрация пользователя успешно совершена.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegistrationDTO'
+        '400':
+          description: Ошибки при регистрации пользователя в системе.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{username}:
+    post:
+      tags:
+        - Управление пользователями.
+      summary: Возвращает пользователя по его логину.
+      description: Принимает логин пользователя, выполняет поиск в базе данных по логину пользователя и возвращает
+        данные пользователя, если такой был найден.
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Логин пользователя в системе.
+      responses:
+        '200':
+          description: Пользователь успешно найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginDTO'
+        '404':
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{userId}:
+    put:
+      tags:
+        - Управление пользователями.
+      summary: Обновляет данные пользователя.
+      description: Принимает актуальные данные пользователя и выполняет обновление в базе данных.
+      security:
+        - JwtAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор пользователя.
+      requestBody:
+        required: true
+        description: Актуальные данные пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateDTO'
+      responses:
+        '200':
+          description: Пользователь успешно обновлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginDTO'
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Управление пользователями.
+      summary: Удаляет данные пользователя.
+      description: Удаляет пользователя из базы данных по идентификатору.
+      security:
+        - JwtAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор пользователя.
+      responses:
+        '200':
+          description: Пользователь успешно удален.
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Управление пользователями.
+      summary: Получает данные пользователя.
+      description: Получает данные пользователя по переданному идентификатору.
+      security:
+        - JwtAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор пользователя.
+      responses:
+        '200':
+          description: Пользователь успешно найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileDTO'
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{userId}/soft:
+    delete:
+      tags:
+        - Управление пользователями.
+      summary: Помечает данные пользователя как удаленные.
+      description: Изменяет статус пользователя на DELETED, не удаляя данные физически.
+      security:
+        - JwtAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Идентификатор пользователя.
+      responses:
+        '200':
+          description: Пользователь успешно помечен как удаленный.
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Пользователь не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users:
+    get:
+      tags:
+        - Управление пользователями.
+      summary: Получает список пользователей.
+      description: Получает список пользователей с подробной информацией о каждом.
+      security:
+        - JwtAuth: []
+      responses:
+        '200':
+          description: Список пользователей успешно получен.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProfileDTO'
+                description: Данные пользователя.
+        '401':
+          description: Недостаточно прав для доступа к данным.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

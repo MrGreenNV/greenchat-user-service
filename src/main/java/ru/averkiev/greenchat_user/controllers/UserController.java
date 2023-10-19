@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
-import ru.averkiev.greenchat_user.exceptions.RegistrationException;
-import ru.averkiev.greenchat_user.exceptions.UserNotFoundException;
 import ru.averkiev.greenchat_user.models.User;
 import ru.averkiev.greenchat_user.models.dto.user.*;
 import ru.averkiev.greenchat_user.services.impl.UserServiceImpl;
@@ -21,7 +19,7 @@ import java.util.List;
  * @author mrGreenNV
  */
 @RestController
-@RequestMapping("greenchat/users")
+@RequestMapping("greenchat/users-service/v1/users")
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class UserController {
@@ -41,13 +39,9 @@ public class UserController {
      * @param userCreateDTO данные для регистрации нового пользователя.
      * @return данные зарегистрированного пользователя или null.
      */
-    @PostMapping("register")
+    @PostMapping("registration")
     public ResponseEntity<UserRegistrationDTO> register(@Valid @RequestBody UserCreateDTO userCreateDTO) {
-        try {
-            return ResponseEntity.ok(userService.register(userCreateDTO));
-        } catch (RegistrationException regEx) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        return ResponseEntity.ok(userService.register(userCreateDTO));
     }
 
     /**
@@ -58,15 +52,8 @@ public class UserController {
      */
     @GetMapping("{username}")
     public ResponseEntity<UserLoginDTO> getUserByLogin(@PathVariable String username) {
-        // Получение пользователя по логину.
-        User user = userService.getUserByLogin(username).orElse(null);
 
-        // Формирование ответа в случае, когда пользователь не был найден.
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        // Создание DTO пользователя для передачи сервису аутентификации.
+        User user = userService.getUserByLogin(username);
         UserLoginDTO userLoginDTO = modelMapper.map(user, UserLoginDTO.class);
 
         return ResponseEntity.ok(userLoginDTO);
@@ -93,14 +80,10 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("{userId}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long userId) {
-        try {
-            userService.deleteUser(userId);
-            return ResponseEntity.ok(HttpStatus.OK);
-        } catch (UserNotFoundException unfEx) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().build();
-        }
+
+        userService.deleteUser(userId);
+        return ResponseEntity.ok(HttpStatus.OK);
+
     }
 
     /**
@@ -111,14 +94,10 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("{userId}/soft")
     public ResponseEntity<HttpStatus> softDeleteUser(@PathVariable Long userId) {
-        try {
-            userService.softDeleteUser(userId);
-            return ResponseEntity.ok(HttpStatus.OK);
-        } catch (UserNotFoundException unfEx) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().build();
-        }
+
+        userService.softDeleteUser(userId);
+        return ResponseEntity.ok(HttpStatus.OK);
+
     }
 
     /**
@@ -126,15 +105,13 @@ public class UserController {
      * @param userId идентификатор пользователя.
      * @return DTO пользователя с данными профиля.
      */
-    @GetMapping("{userId}/profile")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("{userId}")
     public ResponseEntity<UserProfileDTO> showUserProfile(@PathVariable Long userId) {
+
         UserProfileDTO userProfileDTO = modelMapper.map(userService.getUserById(userId), UserProfileDTO.class);
+        return ResponseEntity.ok(userProfileDTO);
 
-        if (userProfileDTO != null) {
-            return ResponseEntity.ok(userProfileDTO);
-        }
-
-        return ResponseEntity.notFound().build();
     }
 
     /**

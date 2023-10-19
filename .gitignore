@@ -18,6 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
+package-info.java
 
 ### NetBeans ###
 /nbproject/private/
@@ -34,3 +35,4 @@ build/
 
 ### Spring ###
 application.properties
+application-dev.yml

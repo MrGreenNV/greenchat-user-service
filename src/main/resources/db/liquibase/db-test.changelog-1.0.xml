@@ -1,0 +1,273 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!--  Создание таблицы с пользователями  -->
+    <changeSet id="createTableUsers" author="mrGreenNV">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastname" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!--  Создание таблицы с ролями пользователей  -->
+    <changeSet id="createTableRoles" author="mrGreenNV">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!--  Создание связующей таблицы пользователей с их ролями  -->
+    <changeSet id="createTableUserRoles" author="mrGreenNV">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+            </column>
+            <column name="role_id" type="BIGINT">
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_roles"
+                                 constraintName="fk_user_roles_user"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"
+        />
+
+        <addForeignKeyConstraint baseColumnNames="role_id"
+                                 baseTableName="user_roles"
+                                 constraintName="fk_user_roles_roles"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="roles"
+        />
+    </changeSet>
+
+    <!--  Создание таблицы с категориями товаров  -->
+    <changeSet id="createTableCategories" author="mrGreenNV">
+        <createTable tableName="categories">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="parent_category_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!--  Создание таблицы с товарами  -->
+    <changeSet id="createTableProduct" author="mrGreenNV">
+        <createTable tableName="products">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="price" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!--  Создание таблицы с изображениями к товарам  -->
+    <changeSet id="createTableImages" author="MrGreenNV">
+        <createTable tableName="images">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="image_data" type="BYTEA">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="images"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_product_images"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <!--  Создание связующей таблицы товаров с категориями  -->
+    <changeSet id="createTableCategoriesProducts" author="mrGreenNV">
+        <createTable tableName="categories_products">
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="categories_products"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_product_categoriesProducts"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint baseTableName="categories_products"
+                                 baseColumnNames="category_id"
+                                 constraintName="fk_category_categoriesProducts"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <!--  Создание таблицы с заказами  -->
+    <changeSet id="createTableOrders" author="mrGreenNV">
+        <createTable tableName="orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="orders"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_users_orders"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <!--  Создание связующей таблицы товаров с заказами  -->
+    <changeSet id="createTableProductsOrders" author="mrGreenNV">
+        <createTable tableName="products_orders">
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="products_orders"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_product_productsOrders"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint baseTableName="products_orders"
+                                 baseColumnNames="order_id"
+                                 constraintName="fk_order_productsOrders"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedTableName="orders"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>
