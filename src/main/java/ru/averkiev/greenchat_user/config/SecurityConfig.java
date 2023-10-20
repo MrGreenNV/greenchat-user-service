@@ -38,7 +38,14 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/greenchat/users/register", "greenchat/users/{username}").permitAll()
+                        .requestMatchers(
+                                "/greenchat/users/register",
+                                "greenchat/users/{username}",
+                                "/swagger-ui/**",
+                                "/swagger.yaml",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
